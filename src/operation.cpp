@@ -9,8 +9,14 @@ operation::operation(){
     //width = 0;;
     scheduledTime = 0;
     scheduled= true;
+    ALAPTime = INT_MAX;
+    ALAPDone = false;
 }
 operation::operation(vector<string> words, vector<variable*> available){
+    scheduledTime = 0;
+    scheduled= true;
+    ALAPTime = INT_MAX;
+    ALAPDone = false;
     type = parseOp(words.at(3));
     if(type == ERROR_OP){
         cout << "Error: Invalid Operation Type" << endl;
@@ -22,7 +28,7 @@ operation::operation(vector<string> words, vector<variable*> available){
     inputsS.push_back(words.at(2));
     inputsS.push_back(words.at(4));
     if(type == MUX){
-        if(words.at(6).compare(":") !=0){
+        if(words.at(5).compare(":") !=0){
             cout << "Error: Invalid Operation" << endl;
             return;
         }
@@ -66,7 +72,7 @@ operation::operation(vector<string> words, vector<variable*> available){
             }
         }
         if(!found){
-            cout << "Output: "<< outputs.at(i) <<" not declared" <<endl;
+            cout << "Output: "<< outputsS.at(i) <<" not declared" <<endl;
             return;
         }
     }
@@ -88,6 +94,24 @@ void operation::addSucessor(operation* successor){
 }
 void operation::addPredecessor(operation* predecessor){
     this->predecessors.push_back(predecessor);
+}
+void operation::setALAPTime(int time){
+    this->ALAPTime = time;
+}
+void operation::setALAPDone(bool done){
+    this->ALAPDone = done;
+}
+int operation::getALAPTime(){
+    return this->ALAPTime;
+}
+bool operation::isALAPDone(){
+    return this->ALAPDone;
+}
+int operation::getSucSize(){
+    return this->successors.size();
+}
+operation* operation::getSucAt(int i){
+    return this->successors.at(i);
 }
 operationType parseOp(string in){
     if(in.compare("+") == 0){

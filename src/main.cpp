@@ -10,6 +10,7 @@ Assignment 3   ECE 474
 #include "operation.h"
 #include "variable.h"
 #include "io.h"
+#include "schedule.h"
 
 using namespace std;
 
@@ -57,14 +58,14 @@ int main(int argc, char *argv[]) {
             currentLineIndex++;
             vector<string> words = splitLine(currentLine);
             if (words.size() < 3) { //Blank Line
-                cout << "blank line: " << currentLine <<endl;
+//                cout << "blank line: " << currentLine <<endl;
             }
             else if (words.at(0).compare(0, 2, "//") == 0) { //Comment Line
-                cout << "comment line: " << currentLine <<endl;
+//                cout << "comment line: " << currentLine <<endl;
             }
             else if (words.size()>2 && (words.at(0).compare("input") == 0 || words.at(0).compare("output") == 0 ||
                                         words.at(0).compare("variable") == 0)) { //Line Defining variable
-                cout << "declaration line: "  << currentLine <<endl;
+//                cout << "declaration line: "  << currentLine <<endl;
                 for(int i = 2; i<words.size(); i++){
                     if(words.at(i).compare(0,2,"//")==0){//ignore anything after '//'
                         break;
@@ -74,7 +75,7 @@ int main(int argc, char *argv[]) {
                 }
             }
             else if (words.at(1).compare("=") == 0) { //operation line
-                cout << "op line: " << currentLine <<endl;
+//                cout << "op line: " << currentLine <<endl;
                 operation* tempOp = new operation(words, variables);//TODO
                 operations.push_back(tempOp);
             }
@@ -99,10 +100,11 @@ int main(int argc, char *argv[]) {
         }
     }
     
+    setALAPS(operations, latency);
     
     /******************** Write Verilog File********************/
     
-    cout << "DONE";
+    cout << "DONE:" << argv[1]<<endl;
     cFile.close();
     verilogFile.close();
 }

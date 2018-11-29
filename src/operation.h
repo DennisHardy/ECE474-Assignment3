@@ -21,6 +21,8 @@ private:
     //int id;
     int scheduledTime;
     bool scheduled;
+    int ALAPTime;
+    bool ALAPDone;
 public:
     operation();
     operation(vector<string> words, vector<variable*> avaliable);
@@ -30,6 +32,12 @@ public:
     vector<variable*> getOutputs();
     void addSucessor(operation* successor);
     void addPredecessor(operation* predecessor);
+    void setALAPTime(int ALAPTime);
+    void setALAPDone(bool done);
+    int getALAPTime();
+    bool isALAPDone();
+    int getSucSize();
+    operation* getSucAt(int i);
 };
 operationType parseOp(string in);
 #endif
