@@ -24,7 +24,7 @@ variable::variable(vector<string> words, int index, operation* inop, operation* 
     }
     name =words.at(index);
     if(type==INPUT){
-        producer = inop;
+        producers.push_back(inop);
         inop->addOutput(this);
     }
     else if (type == OUTPUT){
@@ -42,11 +42,11 @@ int variable::getWidth(){
 bool variable::isSigned(){
     return this->sign;
 }
-void variable::setProducer(operation *producer){
-    this->producer=producer;
+void variable::addProducer(operation *producer){
+    this->producers.push_back(producer);
 }
-operation* variable::getProducer(){
-    return this->producer;
+vector <operation*> variable::getProducers(){
+    return this->producers;
 }
 void variable::addConsumer(operation *consumer){
     this->consumers.push_back(consumer);

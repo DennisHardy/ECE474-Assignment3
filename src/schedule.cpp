@@ -14,13 +14,20 @@ void setALAPS(vector<operation*> ops, int lat){
                 
                 for(int j=0; j<op->getSucSize(); j++){
                     operation* suc = op->getSucAt(j);
+                    if(!(suc==op)){
                     sucsALAPed &= suc->isALAPDone();
                     if(suc->getALAPTime()<earliestSuc){
                         earliestSuc = suc->getALAPTime();
                     }
+                    }
                 }
                 if (sucsALAPed) {
-                    op->setALAPTime(earliestSuc-1);
+                    if(op->getType()==MUL){
+                        op->setALAPTime(earliestSuc-2);
+                    }
+                    else{
+                        op->setALAPTime(earliestSuc-1);
+                    }
                     op->setALAPDone(true);
                     if(op->getALAPTime()<0){
                         cout << "ERROR";

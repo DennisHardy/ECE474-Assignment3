@@ -12,7 +12,7 @@ operation::operation(){
     ALAPTime = INT_MAX;
     ALAPDone = false;
 }
-operation::operation(vector<string> words, vector<variable*> available){
+operation::operation(vector<string> words, vector<variable*> available, vector<operation*> inIfs){
     scheduledTime = 0;
     scheduled= true;
     ALAPTime = INT_MAX;
@@ -22,11 +22,22 @@ operation::operation(vector<string> words, vector<variable*> available){
         cout << "Error: Invalid Operation Type" << endl;
         return;
     }
+    for (int i =0; i<inIfs.size(); i++) {
+        predecessors.push_back(inIfs.at(i));
+        inIfs.at(i)->addSucessor(this);
+        this->addPredecessor(inIfs.at(i));
+    }
     vector<string> inputsS;
     vector<string> outputsS;
-    
-    inputsS.push_back(words.at(2));
-    inputsS.push_back(words.at(4));
+    if(type == IF){
+        inputsS.push_back(words.at(2));
+    }
+    else{
+        inputsS.push_back(words.at(2));
+        inputsS.push_back(words.at(4));
+        outputsS.push_back(words.at(0));
+    }
+
     if(type == MUX){
         if(words.at(5).compare(":") !=0){
             cout << "Error: Invalid Operation" << endl;
@@ -34,7 +45,6 @@ operation::operation(vector<string> words, vector<variable*> available){
         }
         inputsS.push_back(words.at(6));
     }
-    outputsS.push_back(words.at(0));
     
     bool found;
     //check that inputs provided exist
@@ -67,7 +77,12 @@ operation::operation(vector<string> words, vector<variable*> available){
                     return;
                 }
                 this->outputs.push_back(available.at(j));
-                available.at(j)->setProducer(this);
+                available.at(j)->addProducer(this);
+                if (inIfs.size()>0) {
+                    for(int k=0; k <available.at(j)->getProducers().size(); k++){
+                        available.at(j)->getProducers().at(k)->addSucessor(this);
+                    }
+                }
                 //this->sign |= (available.at(j)->isSigned());
             }
         }
@@ -110,6 +125,9 @@ bool operation::isALAPDone(){
 int operation::getSucSize(){
     return this->successors.size();
 }
+operationType operation::getType(){
+    return this->type;
+}
 operation* operation::getSucAt(int i){
     return this->successors.at(i);
 }
@@ -140,6 +158,9 @@ operationType parseOp(string in){
     }
     else if(in.compare("<<") ==0){
         return SHL;
+    }
+    else if(in.compare(")") ==0){
+        return IF;
     }
     else{
         return ERROR_OP;

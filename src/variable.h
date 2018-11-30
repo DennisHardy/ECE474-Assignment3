@@ -14,7 +14,7 @@ private:
     int width;
     bool sign;
     variableType type;
-    operation* producer;
+    vector<operation*> producers;
     vector<operation*> consumers;
 public:
     string getName();
@@ -23,8 +23,8 @@ public:
     variableType getType();
     variable();
     variable(vector<string> words, int index, operation* inop, operation* onop);
-    void setProducer(operation* producer);
-    operation* getProducer();
+    void addProducer(operation* producer);
+    vector<operation*> getProducers();
     void addConsumer(operation* consumer);
     vector<operation*> getConsumers();
 };

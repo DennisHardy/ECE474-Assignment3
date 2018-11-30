@@ -52,20 +52,28 @@ int main(int argc, char *argv[]) {
     int currentLineIndex = 0;
     string currentLine;
     bool error = false;
+    vector<operation*> inIfs;
     
     while (!cFile.eof()) {
         if(getline(cFile, currentLine) && !error){
             currentLineIndex++;
             vector<string> words = splitLine(currentLine);
-            if (words.size() < 3) { //Blank Line
-//                cout << "blank line: " << currentLine <<endl;
+            if (words.size() < 1) { //Blank Line
+                cout << "blank line: " << currentLine <<endl;
+            }
+            else if(words.at(0).compare("}") == 0){
+                cout << "close if line: " << currentLine <<endl;
+                inIfs.pop_back();
+            }
+            else if (words.size() < 3) { //Blank Line
+                cout << "blank line: " << currentLine <<endl;
             }
             else if (words.at(0).compare(0, 2, "//") == 0) { //Comment Line
-//                cout << "comment line: " << currentLine <<endl;
+                cout << "comment line: " << currentLine <<endl;
             }
             else if (words.size()>2 && (words.at(0).compare("input") == 0 || words.at(0).compare("output") == 0 ||
                                         words.at(0).compare("variable") == 0)) { //Line Defining variable
-//                cout << "declaration line: "  << currentLine <<endl;
+                cout << "declaration line: "  << currentLine <<endl;
                 for(int i = 2; i<words.size(); i++){
                     if(words.at(i).compare(0,2,"//")==0){//ignore anything after '//'
                         break;
@@ -75,8 +83,14 @@ int main(int argc, char *argv[]) {
                 }
             }
             else if (words.at(1).compare("=") == 0) { //operation line
-//                cout << "op line: " << currentLine <<endl;
-                operation* tempOp = new operation(words, variables);//TODO
+                cout << "op line: " << currentLine <<endl;
+                operation* tempOp = new operation(words, variables, inIfs);//TODO
+                operations.push_back(tempOp);
+            }
+            else if(words.at(0).compare("if") == 0 && words.at(1).compare("(") == 0 && words.at(3).compare(")") == 0 && words.at(4).compare("{") == 0){ //if line
+                cout << "if line: " << currentLine <<endl;
+                operation* tempOp = new operation(words, variables, inIfs);//TODO
+                inIfs.push_back(tempOp);
                 operations.push_back(tempOp);
             }
         }
@@ -90,17 +104,28 @@ int main(int argc, char *argv[]) {
             variable* curOutput =curOp->getOutputs().at(j);
             for(int k=0; k < curOutput->getConsumers().size(); k++){
                 operation* sucOp = curOutput->getConsumers().at(k);
+                if(curOutput->getName().compare("zrin")==0){
+                    
+                }
                 curOp->addSucessor(sucOp);
+                sucOp->addPredecessor(curOp);
             }
         }
-        for (int j = 0; j<curOp->getInputs().size(); j++) {
+        /*for (int j = 0; j<curOp->getInputs().size(); j++) {
             variable* curInput = curOp->getInputs().at(j);
-            operation* predOp = curInput->getProducer();
-            curOp->addPredecessor(predOp);
-        }
+            for (int k=0; k<curInput->getProducers().size(); k++) {
+                operation* predOp = curInput->getProducers().at(k);
+                curOp->addPredecessor(predOp);
+                predOp->addSucessor(curOp);
+            }
+        }*/
     }
     
     setALAPS(operations, latency);
+    
+    for (int i=2; i<operations.size(); i++) {
+        cout << i-1<< " " << operations.at(i)->getALAPTime() <<endl;
+    }
     
     /******************** Write Verilog File********************/
     

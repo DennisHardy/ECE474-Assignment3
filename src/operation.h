@@ -25,7 +25,7 @@ private:
     bool ALAPDone;
 public:
     operation();
-    operation(vector<string> words, vector<variable*> avaliable);
+    operation(vector<string> words, vector<variable*> avaliable, vector<operation*> inIfs);
     void addOutput(variable* addMe);
     void addInput(variable* addMe);
     vector<variable*> getInputs();
@@ -38,6 +38,7 @@ public:
     bool isALAPDone();
     int getSucSize();
     operation* getSucAt(int i);
+    operationType getType();
 };
 operationType parseOp(string in);
 #endif
