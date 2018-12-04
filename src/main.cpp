@@ -156,7 +156,54 @@ int main(int argc, char *argv[]) {
    }*/
 
    /******************** Write Verilog File********************/
-
+   cout << "GENERATING OUTPUT FILE" << endl;
+   verilogFile << "module HLSM (Clk, Rst, Start, Done";//MODULE START
+   for (int i = 0; i < variables.size(); i++) {
+      if (variables.at(i)->getType() == 0 || variables.at(i)->getType() == 1) {
+         verilogFile << ", " << variables.at(i)->getName();
+      }
+   }
+   verilogFile << ");" << endl;
+   verilogFile << "input Clk, Rst, Start;" << endl;//INPUT START
+   for (int i = 0; i < variables.size(); i++) {
+      if (variables.at(i)->getType() == 0) {
+         verilogFile << "input ";
+         if (variables.at(i)->isSigned()) {
+            verilogFile << "signed ";
+         }
+         if (variables.at(i)->getWidth() > 1) {
+            verilogFile << "[" << variables.at(i)->getWidth() - 1 << ":0] ";
+         }
+         verilogFile << variables.at(i)->getName() << "; " << endl;
+      }
+   }
+   verilogFile << "output reg Done;" << endl;//OUTPUT START
+   for (int i = 0; i < variables.size(); i++) {
+      if (variables.at(i)->getType() == 1) {
+         verilogFile << "output reg ";
+         if (variables.at(i)->isSigned()) {
+            verilogFile << "signed ";
+         }
+         if (variables.at(i)->getWidth() > 1) {
+            verilogFile << "[" << variables.at(i)->getWidth() - 1 << ":0] ";
+         }
+         verilogFile << variables.at(i)->getName() << "; " << endl;
+      }
+   }
+   for (int i = 0; i < variables.size(); i++) {
+      if (variables.at(i)->getType() == 2) {
+         verilogFile << "reg ";
+         if (variables.at(i)->isSigned()) {
+            verilogFile << "signed ";
+         }
+         if (variables.at(i)->getWidth() > 1) {
+            verilogFile << "[" << variables.at(i)->getWidth() - 1 << ":0] ";
+         }
+         verilogFile << variables.at(i)->getName() << "; " << endl;
+      }
+   }
+   verilogFile << "initial begin" << endl;
+   verilogFile << "end" << endl << "endmodule" << endl;
    cout << "DONE:" << argv[1] << endl << endl;
    cFile.close();
    verilogFile.close();
