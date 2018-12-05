@@ -9,7 +9,7 @@ operation::operation() {
    // width = 0;;
    scheduledTime = 0;
    scheduled = true;
-   ALAPTime = INT_MAX;
+   ALAPTime = 21474639647; //INT_MAX not defined, just entering it in manually here for cmake to build properly
    ALAPDone = false;
    id = 0;
 }
@@ -19,7 +19,7 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
    id = count;
    scheduledTime = 0;
    scheduled = false;
-   ALAPTime = INT_MAX;
+   ALAPTime = 21474639647; //formerly INT_MAX; change back when INT_MAX is defined
    ALAPDone = false;
    this->inIfs = inIfs;
    if (words.size() <= 3) {
