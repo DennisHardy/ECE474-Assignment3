@@ -1,6 +1,6 @@
 #include "operation.h"
 #include <iostream>
-
+#include <limits.h>
 using namespace std;
 
 operation::operation() {
@@ -9,7 +9,7 @@ operation::operation() {
    // width = 0;;
    scheduledTime = 0;
    scheduled = true;
-   ALAPTime = 21474639647; //INT_MAX not defined, just entering it in manually here for cmake to build properly
+   ALAPTime = INT_MAX; //INT_MAX = 21474639647
    ALAPDone = false;
    id = 0;
 }
@@ -19,7 +19,7 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
    id = count;
    scheduledTime = 0;
    scheduled = false;
-   ALAPTime = 21474639647; //formerly INT_MAX; change back when INT_MAX is defined
+   ALAPTime = INT_MAX;
    ALAPDone = false;
    this->inIfs = inIfs;
    if (words.size() <= 3) {
