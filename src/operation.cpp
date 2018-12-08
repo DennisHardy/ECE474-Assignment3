@@ -1,6 +1,6 @@
 #include "operation.h"
 #include <iostream>
-#include <limits.h>
+
 using namespace std;
 
 operation::operation() {
@@ -9,9 +9,10 @@ operation::operation() {
 	// width = 0;;
 	scheduledTime = 0;
 	scheduled = true;
-	ALAPTime = INT_MAX; //INT_MAX = 21474639647
+	ALAPTime = 21474639647; //INT_MAX not defined, just entering it in manually here for cmake to build properly
 	ALAPDone = false;
 	id = 0;
+	CompType = -1;
 }
 operation::operation(vector<string> words, vector<variable *> avaliableVars,
 	vector<operation *> inIfs, int count, operation *lastIf,
@@ -19,7 +20,7 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
 	id = count;
 	scheduledTime = 0;
 	scheduled = false;
-	ALAPTime = INT_MAX;
+	ALAPTime = 21474639647; //formerly INT_MAX; change back when INT_MAX is defined
 	ALAPDone = false;
 	this->inIfs = inIfs;
 	if (words.size() <= 3) {
@@ -27,6 +28,12 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
 	}
 	else {
 		type = parseOp(words.at(3));
+		if (type == COMP) {
+			if (words.at(3).compare("<") == 0){CompType = 0;}
+			if (words.at(3).compare(">") == 0) { CompType = 1; }
+			if (words.at(3).compare("==") == 0) { CompType = 2; }
+			cout << "FOUND TYPE " << CompType << " " << endl;
+		}
 	}
 	if (type == ERROR_OP) {
 		cout << "Error: Invalid Operation Type" << endl;
@@ -145,27 +152,18 @@ void operation::addSucessor(operation *successor) {
 void operation::addPredecessor(operation *predecessor) {
 	this->predecessors.push_back(predecessor);
 }
-int operation::getpreedge() { return this->predecessors.size(); }
 void operation::setALAPTime(int time) { this->ALAPTime = time; }
 void operation::setALAPDone(bool done) { this->ALAPDone = done; }
-int operation::getEdge() { return this->edge; }
-void operation::addEdge() { this->edge++; }
-void operation::setEdge(int numedge) { this->edge = numedge; }
 int operation::getALAPTime() { return this->ALAPTime; }
 bool operation::isALAPDone() { return this->ALAPDone; }
 int operation::getSucSize() { return this->successors.size(); }
 operationType operation::getType() { return this->type; }
 operation *operation::getSucAt(int i) { return this->successors.at(i); }
-void operation::setschetime(int timenum1) { this->schetime = timenum1; }
-int operation::getschetime() { return this->schetime; }
-void operation::minsedge() { this->edge--; }
-void operation::minschetime() { this->schetime--; }
 void operation::removeSucAt(int i) {
 	this->successors.erase(this->successors.begin() + i);
 }
-int operation::getscheduledstate() { return this->scheduledTime; }
-void operation::setscheduledstate(int statetime) { this->scheduledTime = statetime; }
 int operation::getId() { return id; }
+int operation::getCompType() { return CompType; }
 void operation::scheduleAt(int time) {
 	this->scheduledTime = time;
 	this->scheduled = true;
