@@ -281,8 +281,8 @@ verilogFile << "else begin" << endl;
 							}
 							else if(operations.at(k)->getType() == 8) {	//IF
 								verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName() << ") begin" << endl;
-								for (int k = 0; k < operations.size(); k++) {
-									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+								for (int l = 0; l < operations.size(); l++) {
+									for (int m = 0; m < operations.at(m)->getInIfs().size(); m++) {
 										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
 											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
 												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
@@ -324,8 +324,8 @@ verilogFile << "else begin" << endl;
 							}
 							else if(operations.at(k)->getType() == 9) {	//ELSE
 								verilogFile << "else begin" << endl;
-								for (int k = 0; k < operations.size(); k++) {
-									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+								for (int l = 0; l < operations.size(); l++) {
+									for (int m = 0; m < operations.at(m)->getInIfs().size(); m++) {
 										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
 											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
 												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
@@ -399,8 +399,8 @@ verilogFile << "else begin" << endl;
 							}
 							else if(operations.at(k)->getType() == 8) {	//IF
 								verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName() << ") begin" << endl;
-								for (int k = 0; k < operations.size(); k++) {
-									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+								for (int l = 0; l < operations.size(); l++) {
+									for (int m = 0; m < operations.at(m)->getInIfs().size(); m++) {
 										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
 											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
 												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
@@ -442,8 +442,8 @@ verilogFile << "else begin" << endl;
 							}
 							else if(operations.at(k)->getType() == 9) {	//ELSE
 								verilogFile << "else begin" << endl;
-								for (int k = 0; k < operations.size(); k++) {
-									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+								for (int l = 0; l < operations.size(); l++) {
+									for (int m = 0; m < operations.at(m)->getInIfs().size(); m++) {
 										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
 											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
 												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
