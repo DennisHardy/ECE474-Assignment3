@@ -36,6 +36,7 @@ class operation {
    // bool sign;
    // int width;
    int id;
+	int CompType;
    int scheduledTime;
    bool scheduled;
    int ALAPTime;
@@ -67,6 +68,7 @@ class operation {
    void setResource();
    vector<operation *> getInIfs();
    bool inIf(operation *anIf);
+	int getCompType();
 };
 class ifElse {
  private:
