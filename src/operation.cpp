@@ -12,6 +12,7 @@ operation::operation() {
    ALAPTime = INT_MAX; //INT_MAX = 21474639647
    ALAPDone = false;
    id = 0;
+   CompType = -1;
 }
 operation::operation(vector<string> words, vector<variable *> avaliableVars,
                      vector<operation *> inIfs, int count, operation *lastIf,
@@ -26,6 +27,11 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
       type = ELSE;
    } else {
       type = parseOp(words.at(3));
+		if (type == COMP) {
+			if (words.at(3).compare("<") == 0){CompType = 0;}
+			if (words.at(3).compare(">") == 0) { CompType = 1; }
+			if (words.at(3).compare("==") == 0) { CompType = 2; }
+		}      
    }
    if (type == ERROR_OP) {
       cout << "Error: Invalid Operation Type" << endl;
