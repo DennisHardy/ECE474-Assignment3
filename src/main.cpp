@@ -202,11 +202,29 @@ int main(int argc, char *argv[]) {
          verilogFile << variables.at(i)->getName() << "; " << endl;
       }
    }
+   verilogFile << "reg [" << ceil(log(latency) / log(2)) - 1 << ":0] State;" << endl;
+   verilogFile << "parameter ";
+   for (int i = 0; i < (latency + 1); i++) {
+	verilogFile << "S" << i << " = " << i;
+	if (i != latency) { verilogFile << ", "; }
+	else { verilogFile << ";" << endl; }
+   }
 verilogFile << "always @(posedge Clk) begin" << endl;
-verilogFile << "if (Rst == 1) begin" << endl;
+verilogFile << "if (Rst == 1) begin" << endl << "Done <= 0" << endl << "State <= S0" << endl << "end" << endl;
 verilogFile << "else begin" << endl;
+verilogFile << "case(State)" << endl;
 	for (int i = 1; i < latency + 1; i++) {
 	//output case
+		verilogFile << "S" << i - 1 << ": begin" << endl;
+		if (i == 1) {
+			verilogFile << "Done <= 0;" << endl;
+			verilogFile << "if (Start == 1) begin" << endl;
+			verilogFile << "State <= S1;" << endl;
+			verilogFile << "end" << endl;
+			verilogFile << "else begin" << endl;
+			verilogFile << "State <= S0;" << endl;
+			verilogFile << "end" << endl;
+		}
 		for (int j = 0; j < operations.size(); j++) {
 			if ((operations.at(j)->getALAPTime() == i) && (operations.at(j)->getInIfs().size() == 0)) {
 				switch (operations.at(j)->getType()) {
@@ -501,8 +519,11 @@ verilogFile << "else begin" << endl;
 			verilogFile << endl;
 		}
 	}
-}  
-verilogFile << "end" << endl << "endmodule" << endl;
+	if (i != latency && i != 1) {verilogFile << "State <= S" << i << ";" << endl << "end" << endl;}
+	if (i == 1) { verilogFile << "end" << endl; }	
+} 
+verilogFile << "Done <= 1;" << endl << "State <= S0;" << endl << "end" << endl << "endcase" << endl << "end" << endl << "endmodule" << endl;
+
 cout << "DONE:" << argv[1] << endl << endl;
 cFile.close();
 verilogFile.close();
