@@ -36,6 +36,7 @@ private:
 	// bool sign;
 	// int width;
 	int id;
+	int CompType;
 	int edge;
 	int scheduledTime;
 	int scheduledstate;
@@ -82,6 +83,7 @@ public:
 	void setResource();
 	vector<operation *> getInIfs();
 	bool inIf(operation *anIf);
+	int getCompType();
 };
 class ifElse {
 private:
