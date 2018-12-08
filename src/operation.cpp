@@ -12,6 +12,8 @@ operation::operation() {
 	ALAPTime = INT_MAX; //INT_MAX = 21474639647
 	ALAPDone = false;
 	id = 0;
+	CompType = -1;
+	
 }
 operation::operation(vector<string> words, vector<variable *> avaliableVars,
 	vector<operation *> inIfs, int count, operation *lastIf,
@@ -27,6 +29,12 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
 	}
 	else {
 		type = parseOp(words.at(3));
+		if (type == COMP) {
+			if (words.at(3).compare("<") == 0){CompType = 0;}
+			if (words.at(3).compare(">") == 0) { CompType = 1; }
+			if (words.at(3).compare("==") == 0) { CompType = 2; }
+			cout << "FOUND TYPE " << CompType << " " << endl;
+		}
 	}
 	if (type == ERROR_OP) {
 		cout << "Error: Invalid Operation Type" << endl;
@@ -166,6 +174,7 @@ void operation::removeSucAt(int i) {
 int operation::getscheduledstate() { return this->scheduledTime; }
 void operation::setscheduledstate(int statetime) { this->scheduledTime = statetime; }
 int operation::getId() { return id; }
+int operation::getCompType() { return CompType; }
 void operation::scheduleAt(int time) {
 	this->scheduledTime = time;
 	this->scheduled = true;
