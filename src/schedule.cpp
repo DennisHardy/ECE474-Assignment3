@@ -64,6 +64,8 @@ void List_R(vector<operation *> ops, int lat) {
 		{
 			cout << "v" << dis + 1 << " dege is " << listing.at(dis)->getEdge() << "\n";
 		}*/
+
+
 	vector<operation *> unschedulingadd;
 	vector<operation *> unschedulingmul;
 	vector<operation *> unschedulingdid;
@@ -113,7 +115,7 @@ void List_R(vector<operation *> ops, int lat) {
 
 		for (int check1 = 0; check1 < schedulingadd.size(); check1++)
 		{
-			if (schedulingadd.at(check1)->getschetime() <= 0)
+			if (schedulingadd.at(check1)->getschetime() == 0)
 			{
 				int edgeid;
 				for (int del = 0; del < schedulingadd.at(check1)->getSucSize(); del++)
@@ -241,6 +243,13 @@ void List_R(vector<operation *> ops, int lat) {
 				schedulingadd.push_back(unschedulingadd.at(count2));
 				used[ADDER] = schedulingadd.size();
 				scheduledcomadd = true;
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingadd.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 			}
 		}
 
@@ -253,7 +262,13 @@ void List_R(vector<operation *> ops, int lat) {
 				schedulingmul.push_back(unschedulingmul.at(count2));
 				used[MULTR] = schedulingmul.size();
 				scheduledcommul = true;
-
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingmul.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 			}
 		}
 
@@ -266,7 +281,13 @@ void List_R(vector<operation *> ops, int lat) {
 				schedulingdid.push_back(unschedulingdid.at(count2));
 				used[DIVDR] = schedulingdid.size();
 				scheduledcomdid = true;
-
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingdid.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 			}
 		}
 		for (int count2 = 0; count2 < unschedulinglog.size(); count2++)
@@ -278,12 +299,19 @@ void List_R(vector<operation *> ops, int lat) {
 				schedulinglog.push_back(unschedulinglog.at(count2));
 				used[LOGIC] = schedulinglog.size();
 				scheduledcomlog = true;
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulinglog.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 			}
 		}
-
+		///////////
 		if (!scheduledcomadd && (unschedulingadd.size() > 0))
 		{
-			if (used[ADDER] < schedulingadd.size())
+			if (used[ADDER] >= schedulingadd.size())
 			{
 				int waitnum2 = lat;
 				int pointer = 0;
@@ -297,6 +325,13 @@ void List_R(vector<operation *> ops, int lat) {
 					}
 				}
 				unschedulingadd.at(pointer)->setschetime(1);
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingadd.at(pointer)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 				schedulingadd.push_back(unschedulingadd.at(pointer));
 				unschedulingadd.erase(unschedulingadd.begin() + pointer);
 
@@ -318,13 +353,20 @@ void List_R(vector<operation *> ops, int lat) {
 					}
 				}
 				unschedulingmul.at(pointer)->setschetime(2);
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingmul.at(pointer)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 				schedulingmul.push_back(unschedulingmul.at(pointer));
 				unschedulingmul.erase(unschedulingmul.begin() + pointer);
 			}
 		}
 		if (!scheduledcomdid && (unschedulingdid.size() > 0))
 		{
-			if (used[DIVDR] > schedulingdid.size())
+			if (used[DIVDR] >= schedulingdid.size())
 			{
 				int waitnum2 = lat;
 				int pointer = 0;
@@ -338,7 +380,13 @@ void List_R(vector<operation *> ops, int lat) {
 					}
 				}
 				unschedulingdid.at(pointer)->setschetime(3);
-
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingdid.at(pointer)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 				schedulingdid.push_back(unschedulingdid.at(pointer));
 				unschedulingdid.erase(unschedulingdid.begin() + pointer);
 
@@ -363,13 +411,19 @@ void List_R(vector<operation *> ops, int lat) {
 					}
 				}
 				unschedulinglog.at(pointer)->setschetime(1);
-
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulinglog.at(pointer)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
 				schedulinglog.push_back(unschedulinglog.at(pointer));
 				unschedulinglog.erase(unschedulinglog.begin() + pointer);
 
 			}
 		}
-		cout << "schedulemul = " << unschedulingmul.size() << "\n";
+		cout << "schedulemul = " << unschedulingadd.size() << "\n";
 
 		/////////////////////////////////
 	}
