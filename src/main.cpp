@@ -208,7 +208,7 @@ verilogFile << "else begin" << endl;
 	for (int i = 1; i < latency + 1; i++) {
 	//output case
 		for (int j = 0; j < operations.size(); j++) {
-			if ((operations.at(j)->getscheduledstate() == i) && (operations.at(j)->getInIfs().size() == 0)) {
+			if ((operations.at(j)->getALAPTime() == i) && (operations.at(j)->getInIfs().size() == 0)) {
 				switch (operations.at(j)->getType()) {
 				case 0://REG
 				verilogFile << "//REG";
