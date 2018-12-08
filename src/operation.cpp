@@ -159,6 +159,7 @@ void operation::removeSucAt(int i) {
    this->successors.erase(this->successors.begin() + i);
 }
 int operation::getId() { return id; }
+int operation::getCompType() { return CompType; }
 void operation::scheduleAt(int time) {
    this->scheduledTime = time;
    this->scheduled = true;
