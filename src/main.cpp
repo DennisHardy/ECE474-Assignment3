@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
 	else { verilogFile << ";" << endl; }
    }
 verilogFile << "always @(posedge Clk) begin" << endl;
-verilogFile << "if (Rst == 1) begin" << endl << "Done <= 0" << endl << "State <= S0" << endl << "end" << endl;
+verilogFile << "if (Rst == 1) begin" << endl << "Done <= 0;" << endl << "State <= S0;" << endl << "end" << endl;
 verilogFile << "else begin" << endl;
 verilogFile << "case(State)" << endl;
 	for (int i = 1; i < latency + 1; i++) {
@@ -255,7 +255,7 @@ verilogFile << "case(State)" << endl;
 				if (operations.at(j)->getCompType() == 2) { verilogFile << " == "; }
 				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ") begin" << endl;
 				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-				verilogFile << "else begin" << endl << operations.at(j)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+				verilogFile << "else begin" << endl << operations.at(j)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end";
 				break;
 				case 5://MUX
 				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= (";
@@ -524,7 +524,7 @@ verilogFile << "case(State)" << endl;
 	if (i != latency && i != 1) {verilogFile << "State <= S" << i << ";" << endl << "end" << endl;}
 	if (i == 1) { verilogFile << "end" << endl; }	
 } 
-verilogFile << "Done <= 1;" << endl << "State <= S0;" << endl << "end" << endl << "endcase" << endl << "end" << endl << "endmodule" << endl;
+verilogFile << "Done <= 1;" << endl << "State <= S0;" << endl << "end" << endl << "endcase" << endl << "end" << endl << "end" << endl <<"endmodule" << endl;
 
 cout << "DONE:" << argv[1] << endl << endl;
 cFile.close();
