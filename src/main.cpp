@@ -202,8 +202,11 @@ int main(int argc, char *argv[]) {
          verilogFile << variables.at(i)->getName() << "; " << endl;
       }
    }
-verilogFile << "initial begin" << endl;
+verilogFile << "always @(posedge Clk) begin" << endl;
+verilogFile << "if (Rst == 1) begin" << endl;
+verilogFile << "else begin" << endl;
 	for (int i = 1; i < latency + 1; i++) {
+	//output case
 		for (int j = 0; j < operations.size(); j++) {
 			if ((operations.at(j)->getALAPTime() == i) && (operations.at(j)->getInIfs().size() == 0)) {
 				switch (operations.at(j)->getType()) {
@@ -277,14 +280,89 @@ verilogFile << "initial begin" << endl;
 								verilogFile << "else begin" << endl << operations.at(k)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
 							}
 							else if(operations.at(k)->getType() == 8) {	//IF
-								verilogFile << "if (1) begin" << endl;
-								//FIXME
-								//FIXME	
+								verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName() << ") begin" << endl;
+								for (int k = 0; k < operations.size(); k++) {
+									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
+											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
+												if (operations.at(l)->getType() == 5) { verilogFile << "("; }
+												verilogFile << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+												switch (operations.at(l)->getType()) {
+												case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;	
+												case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+												default: verilogFile << "0 //"; break;
+												}
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ";" << endl;	
+											}
+											else if(operations.at(l)->getType() == 4) {	//COMP
+												verilogFile << "if (" << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getCompType() == 0) { verilogFile << " < "; }
+												if (operations.at(l)->getCompType() == 1) { verilogFile << " > "; }
+												if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
+												verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+											}
+											else if(operations.at(l)->getType() == 8) {	//IF
+												verilogFile << "if (1) begin" << endl;
+												//FIXME
+												//FIXME	
+												verilogFile << "end" << endl;
+											}
+											else if(operations.at(l)->getType() == 9) {	//ELSE
+												verilogFile << "else begin" << endl;
+												//FIXME
+												//FIXME
+												verilogFile << "end" << endl;
+											}
+										}
+									}
+								}
 								verilogFile << "end" << endl;
 							}
 							else if(operations.at(k)->getType() == 9) {	//ELSE
 								verilogFile << "else begin" << endl;
-								//FIXME
+								for (int k = 0; k < operations.size(); k++) {
+									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
+											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
+												if (operations.at(l)->getType() == 5) { verilogFile << "("; }
+												verilogFile << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+												switch (operations.at(l)->getType()) {
+												case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;	
+												case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+												default: verilogFile << "0 //"; break;
+												}
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ";" << endl;	
+											}
+											else if(operations.at(l)->getType() == 4) {	//COMP
+												verilogFile << "if (" << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getCompType() == 0) { verilogFile << " < "; }
+												if (operations.at(l)->getCompType() == 1) { verilogFile << " > "; }
+												if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
+												verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+											}
+											else if(operations.at(l)->getType() == 8) {	//IF
+												verilogFile << "if (1) begin" << endl;
+												//FIXME
+												//FIXME	
+												verilogFile << "end" << endl;
+											}
+											else if(operations.at(l)->getType() == 9) {	//ELSE
+												verilogFile << "else begin" << endl;
+												//FIXME
+												//FIXME
+												verilogFile << "end" << endl;
+											}
+										}
+									}
+								}
 								//FIXME
 								verilogFile << "end" << endl;
 							}
@@ -294,7 +372,7 @@ verilogFile << "initial begin" << endl;
 				verilogFile << "end";
 				break;
 				case 9://ELSE
-				cout << "else begin" << endl;
+				verilogFile << "else begin" << endl;
 				for (int k = 0; k < operations.size(); k++) {
 					for (int l = 0; l < operations.at(k)->getInIfs().size(); l++) {
 						if (operations.at(k)->getInIfs().at(l) == operations.at(j) && (operations.at(k)->getInIfs().size()-(l+1)) == 0) {
@@ -320,21 +398,96 @@ verilogFile << "initial begin" << endl;
 								verilogFile << "else begin" << endl << operations.at(k)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
 							}
 							else if(operations.at(k)->getType() == 8) {	//IF
-								verilogFile << "if (1) begin" << endl;
-								//FIXME
-								//FIXME	
+								verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName() << ") begin" << endl;
+								for (int k = 0; k < operations.size(); k++) {
+									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
+											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
+												if (operations.at(l)->getType() == 5) { verilogFile << "("; }
+												verilogFile << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+												switch (operations.at(l)->getType()) {
+												case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;	
+												case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+												default: verilogFile << "0 //"; break;
+												}
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ";" << endl;	
+											}
+											else if(operations.at(l)->getType() == 4) {	//COMP
+												verilogFile << "if (" << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getCompType() == 0) { verilogFile << " < "; }
+												if (operations.at(l)->getCompType() == 1) { verilogFile << " > "; }
+												if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
+												verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+											}
+											else if(operations.at(l)->getType() == 8) {	//IF
+												verilogFile << "if (1) begin" << endl;
+												//FIXME
+												//FIXME	
+												verilogFile << "end" << endl;
+											}
+											else if(operations.at(l)->getType() == 9) {	//ELSE
+												verilogFile << "else begin" << endl;
+												//FIXME
+												//FIXME
+												verilogFile << "end" << endl;
+											}
+										}
+									}
+								}
 								verilogFile << "end" << endl;
 							}
 							else if(operations.at(k)->getType() == 9) {	//ELSE
 								verilogFile << "else begin" << endl;
-								//FIXME
+								for (int k = 0; k < operations.size(); k++) {
+									for (int l = 0; l < operations.at(l)->getInIfs().size(); l++) {
+										if (operations.at(l)->getInIfs().at(m) == operations.at(k) && (operations.at(l)->getInIfs().size()-(l+1)) == 0) {
+											if (operations.at(l)->getType() != 8 && operations.at(l)->getType() != 9 && operations.at(l)->getType() != 4) {
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
+												if (operations.at(l)->getType() == 5) { verilogFile << "("; }
+												verilogFile << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+												switch (operations.at(l)->getType()) {
+												case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;	
+												case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+												default: verilogFile << "0 //"; break;
+												}
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ";" << endl;	
+											}
+											else if(operations.at(l)->getType() == 4) {	//COMP
+												verilogFile << "if (" << operations.at(l)->getInputs().at(0)->getName();
+												if (operations.at(l)->getCompType() == 0) { verilogFile << " < "; }
+												if (operations.at(l)->getCompType() == 1) { verilogFile << " > "; }
+												if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
+												verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
+												verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
+												verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+											}
+											else if(operations.at(l)->getType() == 8) {	//IF
+												verilogFile << "if (1) begin" << endl;
+												//FIXME
+												//FIXME	
+												verilogFile << "end" << endl;
+											}
+											else if(operations.at(l)->getType() == 9) {	//ELSE
+												verilogFile << "else begin" << endl;
+												//FIXME
+												//FIXME
+												verilogFile << "end" << endl;
+											}
+										}
+									}
+								}
 								//FIXME
 								verilogFile << "end" << endl;
 							}
 						}
 					}
-				}						
-				cout << "end";
+				}
+				verilogFile << "end";
 				break;
 				case 10: verilogFile << "//FOR ";
 				break;
