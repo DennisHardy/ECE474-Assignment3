@@ -1,6 +1,7 @@
 #include "operation.h"
 #include <iostream>
 #include <limits.h>
+#include "variable.h"
 
 using namespace std;
 
