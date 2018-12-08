@@ -11,7 +11,8 @@ Assignment 3   ECE 474
 #include <sstream>
 #include <string>
 #include <vector>
-#include <math>
+#include <math.h>
+//#include <tgmath.h>
 
 using namespace std;
 
