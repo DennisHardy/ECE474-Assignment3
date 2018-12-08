@@ -46,6 +46,7 @@ void List_R(vector<operation *> ops, int lat) {
 	for (int count = 0; count < ops.size(); count++)
 	{
 		ops.at(count)->setEdge(0);
+		ops.at(count)->setscheduledstate(0);
 	}
 	for (int step = 2; step < ops.size(); step++)
 	{
@@ -60,11 +61,6 @@ void List_R(vector<operation *> ops, int lat) {
 	//"Schedule In NOP"
 	vector<operation *> listing = ops;
 	listing.erase(listing.begin(), listing.begin() + 2);
-	/*	for (int dis = 0; dis < listing.size(); dis++)
-		{
-			cout << "v" << dis + 1 << " dege is " << listing.at(dis)->getEdge() << "\n";
-		}*/
-
 
 	vector<operation *> unschedulingadd;
 	vector<operation *> unschedulingmul;
@@ -75,12 +71,16 @@ void List_R(vector<operation *> ops, int lat) {
 	vector<operation *> schedulingmul;
 	vector<operation *> schedulingdid;
 	vector<operation *> schedulinglog;
+
 	bool scheduledcomadd = false;
 	bool scheduledcommul = false;
 	bool scheduledcomdid = false;
 	bool scheduledcomlog = false;
+
 	int delnum;
 	int waitnum;
+	int deladd=0, delmul=0, deldid=0, dellog=0;
+
 	used[ADDER] = 1;
 	used[MULTR] = 1;
 	used[LOGIC] = 1;
@@ -91,119 +91,99 @@ void List_R(vector<operation *> ops, int lat) {
 		scheduledcommul = false;
 		scheduledcomdid = false;
 		scheduledcomlog = false;
-		cout << "I = " << I << " ";
-
-		for (int check1 = 0; check1 < schedulingadd.size(); check1++)
-		{
-			schedulingadd.at(check1)->minschetime();
-		}
-		for (int check1 = 0; check1 < schedulingmul.size(); check1++)
-		{
-			schedulingmul.at(check1)->minschetime();
-		}
-		for (int check1 = 0; check1 < schedulingdid.size(); check1++)
-		{
-			schedulingdid.at(check1)->minschetime();
-		}
-		for (int check1 = 0; check1 < schedulinglog.size(); check1++)
-		{
-			schedulinglog.at(check1)->minschetime();
-		}
-
-
-
-
+		/////////////////////////////check schetime,remove edge
+		deladd = 0;
+		delmul = 0;
+		deldid = 0;
+		dellog = 0;
 		for (int check1 = 0; check1 < schedulingadd.size(); check1++)
 		{
 			if (schedulingadd.at(check1)->getschetime() == 0)
 			{
+				deladd++;
 				int edgeid;
 				for (int del = 0; del < schedulingadd.at(check1)->getSucSize(); del++)
 				{
 					edgeid = schedulingadd.at(check1)->getSucAt(del)->getId() - 1;
 					listing.at(edgeid)->minsedge();
 				}
-				delnum = schedulingadd.at(check1)->getId();
-				for (int count4 = 0; count4 < unschedulingadd.size(); count4++)
-				{
-					if (unschedulingadd.at(count4)->getId() == delnum)
-					{
-						unschedulingadd.erase(unschedulingadd.begin() + count4);
+			}
+		}
+		if (deladd != 0)
+		{
+			for (int remove = 0; remove < deladd; remove++)
+			{
+				schedulingadd.erase(schedulingadd.begin());
 
-					}
-				}
-				schedulingadd.erase(schedulingadd.begin() + check1);
 			}
 		}
 		for (int check1 = 0; check1 < schedulingmul.size(); check1++)
 		{
-			if (schedulingmul.at(check1)->getschetime() <= 0)
+			if (schedulingmul.at(check1)->getschetime() == 0)
 			{
+				delmul++;
 				int edgeid;
 				for (int del = 0; del < schedulingmul.at(check1)->getSucSize(); del++)
 				{
 					edgeid = schedulingmul.at(check1)->getSucAt(del)->getId() - 1;
 					listing.at(edgeid)->minsedge();
 				}
-				delnum = schedulingmul.at(check1)->getId();
-				for (int count4 = 0; count4 < unschedulingmul.size(); count4++)
-				{
-					if (unschedulingmul.at(count4)->getId() == delnum)
-					{
-						unschedulingmul.erase(unschedulingmul.begin() + count4);
-
-					}
-				}
-				schedulingmul.erase(schedulingmul.begin() + check1);
 			}
 		}
+		if (delmul != 0)
+		{
+			for (int remove = 0; remove < delmul; remove++)
+			{
+				schedulingmul.erase(schedulingmul.begin());
+
+			}
+		}
+
+		
 		for (int check1 = 0; check1 < schedulingdid.size(); check1++)
 		{
-			if (schedulingdid.at(check1)->getschetime() <= 0)
+			if (schedulingdid.at(check1)->getschetime() == 0)
 			{
+				deldid++;
 				int edgeid;
 				for (int del = 0; del < schedulingdid.at(check1)->getSucSize(); del++)
 				{
 					edgeid = schedulingdid.at(check1)->getSucAt(del)->getId() - 1;
 					listing.at(edgeid)->minsedge();
 				}
-				delnum = schedulingdid.at(check1)->getId();
-				for (int count4 = 0; count4 < unschedulingdid.size(); count4++)
-				{
-					if (unschedulingdid.at(count4)->getId() == delnum)
-					{
-						unschedulingdid.erase(unschedulingdid.begin() + count4);
+			}
+		}
+		if (deldid != 0)
+		{
+			for (int remove = 0; remove < deldid; remove++)
+			{
+				schedulingdid.erase(schedulingdid.begin());
 
-					}
-				}
-				schedulingdid.erase(schedulingdid.begin() + check1);
 			}
 		}
 		for (int check1 = 0; check1 < schedulinglog.size(); check1++)
 		{
 			if (schedulinglog.at(check1)->getschetime() <= 0)
 			{
+				dellog++;
 				int edgeid;
 				for (int del = 0; del < schedulinglog.at(check1)->getSucSize(); del++)
 				{
 					edgeid = schedulinglog.at(check1)->getSucAt(del)->getId() - 1;
 					listing.at(edgeid)->minsedge();
 				}
-				delnum = schedulingadd.at(check1)->getId();
-				for (int count4 = 0; count4 < unschedulinglog.size(); count4++)
-				{
-					if (unschedulinglog.at(count4)->getId() == delnum)
-					{
-						unschedulinglog.erase(unschedulinglog.begin() + count4);
+			}
+		}
+		if (dellog != 0)
+		{
+			for (int remove = 0; remove < dellog; remove++)
+			{
+				schedulinglog.erase(schedulinglog.begin());
 
-					}
-				}
-				schedulinglog.erase(schedulinglog.begin() + check1);
 			}
 		}
 
-
-
+		/////////check edge if is 0;
 		for (int count1 = 0; count1 < listing.size(); count1++)
 		{
 			if (listing.at(count1)->getEdge() == 0)
@@ -233,10 +213,11 @@ void List_R(vector<operation *> ops, int lat) {
 			}
 		}
 
-		//////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////set scheduling ops
+		//adder
 		for (int count2 = 0; count2 < unschedulingadd.size(); count2++)
 		{
-			waitnum = unschedulingadd.at(count2)->getALAPTime()-I;
+			waitnum = unschedulingadd.at(count2)->getALAPTime() - I;
 			if (waitnum == 0)
 			{
 				unschedulingadd.at(count2)->setschetime(1);
@@ -252,63 +233,22 @@ void List_R(vector<operation *> ops, int lat) {
 				}
 			}
 		}
-
-		for (int count2 = 0; count2 < unschedulingmul.size(); count2++)
+		if (scheduledcomadd)
 		{
-			waitnum = unschedulingmul.at(count2)->getALAPTime()-I;
-			if (waitnum == 0)
+			for (int check2 = 2; check2 < ops.size(); check2++)
 			{
-				unschedulingmul.at(count2)->setschetime(2);
-				schedulingmul.push_back(unschedulingmul.at(count2));
-				used[MULTR] = schedulingmul.size();
-				scheduledcommul = true;
-				for (int count5 = 0; count5 < ops.size(); count5++)
+				if (ops.at(check2)->getscheduledstate() != 0)
 				{
-					if (unschedulingmul.at(count2)->getId() == ops.at(count5)->getId())
+					for (int check3 = 0; check3 < unschedulingadd.size(); check3++)
 					{
-						ops.at(count5)->setscheduledstate(I);
+						if (unschedulingadd.at(check3)->getId() == ops.at(check2)->getId())
+						{
+							unschedulingadd.erase(unschedulingadd.begin() + check3);
+						}
 					}
 				}
 			}
 		}
-
-		for (int count2 = 0; count2 < unschedulingdid.size(); count2++)
-		{
-			waitnum = unschedulingdid.at(count2)->getALAPTime()-I;
-			if (waitnum == 0)
-			{
-				unschedulingdid.at(count2)->setschetime(3);
-				schedulingdid.push_back(unschedulingdid.at(count2));
-				used[DIVDR] = schedulingdid.size();
-				scheduledcomdid = true;
-				for (int count5 = 0; count5 < ops.size(); count5++)
-				{
-					if (unschedulingdid.at(count2)->getId() == ops.at(count5)->getId())
-					{
-						ops.at(count5)->setscheduledstate(I);
-					}
-				}
-			}
-		}
-		for (int count2 = 0; count2 < unschedulinglog.size(); count2++)
-		{
-			waitnum = unschedulinglog.at(count2)->getALAPTime()-I;
-			if (waitnum == 0)
-			{
-				unschedulinglog.at(count2)->setschetime(1);
-				schedulinglog.push_back(unschedulinglog.at(count2));
-				used[LOGIC] = schedulinglog.size();
-				scheduledcomlog = true;
-				for (int count5 = 0; count5 < ops.size(); count5++)
-				{
-					if (unschedulinglog.at(count2)->getId() == ops.at(count5)->getId())
-					{
-						ops.at(count5)->setscheduledstate(I);
-					}
-				}
-			}
-		}
-		///////////
 		if (!scheduledcomadd && (unschedulingadd.size() > 0))
 		{
 			if (used[ADDER] >= schedulingadd.size())
@@ -317,7 +257,7 @@ void List_R(vector<operation *> ops, int lat) {
 				int pointer = 0;
 				for (int count3 = 0; count3 < unschedulingadd.size(); count3++)
 				{
-					waitnum = unschedulingadd.at(count3)->getALAPTime()-I;
+					waitnum = unschedulingadd.at(count3)->getALAPTime() - I;
 					if (waitnum < waitnum2)
 					{
 						pointer = count3;
@@ -337,6 +277,41 @@ void List_R(vector<operation *> ops, int lat) {
 
 			}
 		}
+		//muler
+		for (int count2 = 0; count2 < unschedulingmul.size(); count2++)
+		{
+			waitnum = unschedulingmul.at(count2)->getALAPTime() - I;
+			if (waitnum == 0)
+			{
+				unschedulingmul.at(count2)->setschetime(2);
+				schedulingmul.push_back(unschedulingmul.at(count2));
+				used[MULTR] = schedulingmul.size();
+				scheduledcommul = true;
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingmul.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
+			}
+		}
+		if (scheduledcommul)
+		{
+			for (int check2 = 2; check2 < ops.size(); check2++)
+			{
+				if (ops.at(check2)->getscheduledstate() != 0)
+				{
+					for (int check3 = 0; check3 < unschedulingmul.size(); check3++)
+					{
+						if (unschedulingmul.at(check3)->getId() == ops.at(check2)->getId())
+						{
+							unschedulingmul.erase(unschedulingmul.begin() + check3);
+						}
+					}
+				}
+			}
+		}
 		if (!scheduledcommul && (unschedulingmul.size() > 0))
 		{
 			if (used[MULTR] > schedulingmul.size())
@@ -345,7 +320,7 @@ void List_R(vector<operation *> ops, int lat) {
 				int pointer = 0;
 				for (int count3 = 0; count3 < unschedulingmul.size(); count3++)
 				{
-					waitnum = unschedulingmul.at(count3)->getALAPTime()-I;
+					waitnum = unschedulingmul.at(count3)->getALAPTime() - I;
 					if (waitnum < waitnum2)
 					{
 						pointer = count3;
@@ -364,15 +339,51 @@ void List_R(vector<operation *> ops, int lat) {
 				unschedulingmul.erase(unschedulingmul.begin() + pointer);
 			}
 		}
+		
+		//dider
+		for (int count2 = 0; count2 < unschedulingdid.size(); count2++)
+		{
+			waitnum = unschedulingdid.at(count2)->getALAPTime() - I;
+			if (waitnum == 0)
+			{
+				unschedulingdid.at(count2)->setschetime(3);
+				schedulingdid.push_back(unschedulingdid.at(count2));
+				used[DIVDR] = schedulingdid.size();
+				scheduledcomdid = true;
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulingdid.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
+			}
+		}
+		if (scheduledcomdid)
+		{
+			for (int check2 = 2; check2 < ops.size(); check2++)
+			{
+				if (ops.at(check2)->getscheduledstate() != 0)
+				{
+					for (int check3 = 0; check3 < unschedulingdid.size(); check3++)
+					{
+						if (unschedulingdid.at(check3)->getId() == ops.at(check2)->getId())
+						{
+							unschedulingdid.erase(unschedulingdid.begin() + check3);
+						}
+					}
+				}
+			}
+		}
 		if (!scheduledcomdid && (unschedulingdid.size() > 0))
 		{
-			if (used[DIVDR] >= schedulingdid.size())
+			if (used[DIVDR] > schedulingdid.size())
 			{
 				int waitnum2 = lat;
 				int pointer = 0;
 				for (int count3 = 0; count3 < unschedulingdid.size(); count3++)
 				{
-					waitnum = unschedulingdid.at(count3)->getALAPTime()-I;
+					waitnum = unschedulingdid.at(count3)->getALAPTime() - I;
 					if (waitnum < waitnum2)
 					{
 						pointer = count3;
@@ -393,9 +404,43 @@ void List_R(vector<operation *> ops, int lat) {
 			}
 		}
 
+		//loger
+		for (int count2 = 0; count2 < unschedulinglog.size(); count2++)
+		{
+			waitnum = unschedulinglog.at(count2)->getALAPTime() - I;
+			if (waitnum == 0)
+			{
+				unschedulinglog.at(count2)->setschetime(1);
+				schedulinglog.push_back(unschedulinglog.at(count2));
+				used[LOGIC] = schedulinglog.size();
+				scheduledcomlog = true;
+				for (int count5 = 0; count5 < ops.size(); count5++)
+				{
+					if (unschedulinglog.at(count2)->getId() == ops.at(count5)->getId())
+					{
+						ops.at(count5)->setscheduledstate(I);
+					}
+				}
+			}
+		}
+		if (scheduledcomlog)
+		{
+			for (int check2 = 2; check2 < ops.size(); check2++)
+			{
+				if (ops.at(check2)->getscheduledstate() != 0)
+				{
+					for (int check3 = 0; check3 < unschedulinglog.size(); check3++)
+					{
+						if (unschedulinglog.at(check3)->getId() == ops.at(check2)->getId())
+						{
+							unschedulinglog.erase(unschedulinglog.begin() + check3);
+						}
+					}
+				}
+			}
+		}
 		if (!scheduledcomlog && (unschedulinglog.size() > 0))
 		{
-			cout << "" << "\n";
 
 			if (used[LOGIC] > schedulinglog.size())
 			{
@@ -403,7 +448,7 @@ void List_R(vector<operation *> ops, int lat) {
 				int pointer = 0;
 				for (int count3 = 0; count3 < unschedulinglog.size(); count3++)
 				{
-					waitnum = unschedulinglog.at(count3)->getALAPTime()-I;
+					waitnum = unschedulinglog.at(count3)->getALAPTime() - I;
 					if (waitnum < waitnum2)
 					{
 						pointer = count3;
@@ -423,10 +468,41 @@ void List_R(vector<operation *> ops, int lat) {
 
 			}
 		}
-		cout << "schedulemul = " << unschedulingadd.size() << "\n";
+//////////////////////////////////
 
+
+		
+
+
+
+		
+
+		//////////////////////////////////////////////////////////////////////////////////
+		
+		///////////
+		
+		
+		for (int check1 = 0; check1 < schedulingadd.size(); check1++)
+		{
+			schedulingadd.at(check1)->minschetime();
+		}
+		for (int check1 = 0; check1 < schedulingmul.size(); check1++)
+		{
+			schedulingmul.at(check1)->minschetime();
+		}
+		for (int check1 = 0; check1 < schedulingdid.size(); check1++)
+		{
+			schedulingdid.at(check1)->minschetime();
+		}
+		for (int check1 = 0; check1 < schedulinglog.size(); check1++)
+		{
+			schedulinglog.at(check1)->minschetime();
+		}
 		/////////////////////////////////
 	}
 	cout << "system need " << used[ADDER] << "adder, " << used[MULTR] << "mul, " << used[LOGIC] << " logics, " << used[DIVDR] << " dids" << "\n";
-
+	for (int test1 = 2; test1 < ops.size(); test1++)
+	{
+		cout << "v" << ops.at(test1)->getId() << " lantancy clcye is " << ops.at(test1)->getscheduledstate() << ".\n";
+	}
 }
