@@ -208,9 +208,7 @@ verilogFile << "initial begin" << endl;
 			if ((operations.at(j)->getALAPTime() == i) && (operations.at(j)->getInIfs().size() == 0)) {
 				switch (operations.at(j)->getType()) {
 				case 0://REG
-				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= ";
-				verilogFile << operations.at(j)->getInputs().at(0)->getName() << " == ";
-				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ";";
+				verilogFile << "//REG";
 				break;
 				case 1://ADD
 				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= ";
@@ -228,9 +226,13 @@ verilogFile << "initial begin" << endl;
 				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ";";
 				break;
 				case 4://COMP
-				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= ";
-				verilogFile << operations.at(j)->getInputs().at(0)->getName() << " FIXME ";
-				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ";";
+				verilogFile << "if (" << operations.at(j)->getInputs().at(0)->getName();
+				if (operations.at(j)->getCompType() == 0) { verilogFile << " < "; }
+				if (operations.at(j)->getCompType() == 1) { verilogFile << " > "; }
+				if (operations.at(j)->getCompType() == 2) { verilogFile << " == "; }
+				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ") begin" << endl;
+				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
+				verilogFile << "else begin" << endl << operations.at(j)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
 				break;
 				case 5://MUX
 				verilogFile << operations.at(j)->getOutputs().at(0)->getName() << " <= (";
@@ -249,7 +251,7 @@ verilogFile << "initial begin" << endl;
 				verilogFile << operations.at(j)->getInputs().at(1)->getName() << ";";
 				break;
 				case 8://IF
-				verilogFile << "if (" << operations.at(j)->getInputs().at(0)->getName() << ") {" << endl;
+				verilogFile << "if (" << operations.at(j)->getInputs().at(0)->getName() << ") begin" << endl;
 				for (int k = 0; k < operations.size(); k++) {
 					if (operations.at(k)->getInIfs().size() > 0) {
 						if (operations.at(k)->getInIfs().at(0) == operations.at(j)) {
@@ -259,7 +261,7 @@ verilogFile << "initial begin" << endl;
 							case 1: verilogFile << " + "; break;
 							case 2: verilogFile << " - "; break;
 							case 3: verilogFile << " * "; break;
-							case 4: verilogFile << " FIXME ";   break;
+							case 4: verilogFile << " +/*FIXME*/ ";   break;
 							case 5: break;
 							case 6: verilogFile << " >> "; break;
 							case 7: verilogFile << " << "; break;
@@ -271,11 +273,23 @@ verilogFile << "initial begin" << endl;
 						}
 					}
 				}
-				verilogFile << "}";
+				verilogFile << "end";
 				break;
-				case 9://FOR
+				case 9://ELSE
+				cout << "else begin" << endl;
+				for (int k = 0; k < operations.size(); k++) {
+					if (operations.at(k)->getInIfs().size() > 0) {
+					}
+				}
+				cout << "end";
 				break;
-				case 10://NOP
+				case 10: verilogFile << "//FOR ";
+				break;
+				case 11: verilogFile << "//DIV ";
+				break;
+				case 12: verilogFile << "//MOD ";
+				break;
+				case 13: verilogFile << "//NOP ";
 				break;
 			}
 			verilogFile << endl;
