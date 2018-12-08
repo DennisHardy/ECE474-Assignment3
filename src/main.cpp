@@ -297,7 +297,6 @@ verilogFile << "initial begin" << endl;
 	}
 }  
 verilogFile << "end" << endl << "endmodule" << endl;
-verilogFile << "end" << endl << "endmodule" << endl;
 cout << "DONE:" << argv[1] << endl << endl;
 cFile.close();
 verilogFile.close();
