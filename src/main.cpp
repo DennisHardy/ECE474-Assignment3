@@ -11,6 +11,7 @@ Assignment 3   ECE 474
 #include <sstream>
 #include <string>
 #include <vector>
+#include <math>
 
 using namespace std;
 
