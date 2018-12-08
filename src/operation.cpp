@@ -1,8 +1,6 @@
 #include "operation.h"
 #include <iostream>
 #include <limits.h>
-#include "variable.h"
-
 using namespace std;
 
 operation::operation() {
@@ -165,6 +163,8 @@ void operation::minschetime() { this->schetime--; }
 void operation::removeSucAt(int i) {
 	this->successors.erase(this->successors.begin() + i);
 }
+int operation::getscheduledstate() { return this->scheduledTime; }
+void operation::setscheduledstate(int statetime) { this->scheduledTime = statetime; }
 int operation::getId() { return id; }
 void operation::scheduleAt(int time) {
 	this->scheduledTime = time;
