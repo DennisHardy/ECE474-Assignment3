@@ -43,6 +43,7 @@ void setALAPS(vector<operation *> ops, int lat) {
 }
 void List_R(vector<operation *> ops, int lat) {
 	int preid;
+	
 	for (int count = 0; count < ops.size(); count++)
 	{
 		ops.at(count)->setEdge(0);
@@ -56,6 +57,7 @@ void List_R(vector<operation *> ops, int lat) {
 			ops.at(preid + 1)->addEdge();
 		}
 	}
+
 	int needed[ERROR_RES] = { 1, 1, 1, 1 };
 	int used[ERROR_RES];
 	//"Schedule In NOP"
@@ -76,10 +78,11 @@ void List_R(vector<operation *> ops, int lat) {
 	bool scheduledcommul = false;
 	bool scheduledcomdid = false;
 	bool scheduledcomlog = false;
+	bool scheduledcomif = false;
 
 	int delnum;
 	int waitnum;
-	int deladd=0, delmul=0, deldid=0, dellog=0;
+	int deladd=0, delmul=0, deldid=0, dellog=0,delif=0;
 
 	used[ADDER] = 1;
 	used[MULTR] = 1;
@@ -117,19 +120,7 @@ void List_R(vector<operation *> ops, int lat) {
 
 			}
 		}
-		for (int check1 = 0; check1 < schedulingmul.size(); check1++)
-		{
-			if (schedulingmul.at(check1)->getschetime() == 0)
-			{
-				delmul++;
-				int edgeid;
-				for (int del = 0; del < schedulingmul.at(check1)->getSucSize(); del++)
-				{
-					edgeid = schedulingmul.at(check1)->getSucAt(del)->getId() - 1;
-					listing.at(edgeid)->minsedge();
-				}
-			}
-		}
+		
 		if (delmul != 0)
 		{
 			for (int remove = 0; remove < delmul; remove++)
@@ -204,6 +195,16 @@ void List_R(vector<operation *> ops, int lat) {
 					|| listing.at(count1)->getType() == SHL)
 				{
 					unschedulinglog.push_back(listing.at(count1));
+				}
+				else if (listing.at(count1)->getType() == IF)
+				{
+					ops.at(count1+2)->setscheduledstate(I);
+					int edgeid;
+					for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
+					{
+						edgeid = listing.at(count1)->getSucAt(del)->getId() - 1;
+						listing.at(edgeid)->minsedge();
+					}
 				}
 				else
 				{
