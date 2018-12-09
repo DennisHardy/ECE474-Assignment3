@@ -48,6 +48,7 @@ void List_R(vector<operation *> ops, int lat) {
 	{
 		ops.at(count)->setEdge(0);
 		ops.at(count)->setscheduledstate(0);
+		ops.at(count)->setschetime(-1);
 	}
 	for (int step = 2; step < ops.size(); step++)
 	{
@@ -57,7 +58,10 @@ void List_R(vector<operation *> ops, int lat) {
 			ops.at(preid + 1)->addEdge();
 		}
 	}
-
+	/*for (int test1 = 2; test1 < ops.size(); test1++)
+	{
+		cout << "v" << ops.at(test1)->getId() << " edge is " << ops.at(test1)->getEdge() << ".\n";
+	}*/
 	int needed[ERROR_RES] = { 1, 1, 1, 1 };
 	int used[ERROR_RES];
 	//"Schedule In NOP"
@@ -90,6 +94,11 @@ void List_R(vector<operation *> ops, int lat) {
 	used[DIVDR] = 1;
 
 	for (int I = 1; I <= lat; I++) {
+		/*cout << "I =" << I << ":" << "\n";
+		for (int test1 = 0; test1 < listing.size(); test1++)
+		{
+			cout << "v" << listing.at(test1)->getId() << " edge is " << listing.at(test1)->getEdge() << " schetime is " << listing.at(test1)->getschetime() <<  ".\n";
+		}*/
 		scheduledcomadd = false;
 		scheduledcommul = false;
 		scheduledcomdid = false;
@@ -99,6 +108,7 @@ void List_R(vector<operation *> ops, int lat) {
 		delmul = 0;
 		deldid = 0;
 		dellog = 0;
+
 		for (int check1 = 0; check1 < schedulingadd.size(); check1++)
 		{
 			if (schedulingadd.at(check1)->getschetime() == 0)
@@ -120,7 +130,19 @@ void List_R(vector<operation *> ops, int lat) {
 
 			}
 		}
-		
+		for (int check1 = 0; check1 < schedulingmul.size(); check1++)
+		{
+			if (schedulingmul.at(check1)->getschetime() == 0)
+			{
+				deladd++;
+				int edgeid;
+				for (int del = 0; del < schedulingmul.at(check1)->getSucSize(); del++)
+				{
+					edgeid = schedulingmul.at(check1)->getSucAt(del)->getId() - 1;
+					listing.at(edgeid)->minsedge();
+				}
+			}
+		}
 		if (delmul != 0)
 		{
 			for (int remove = 0; remove < delmul; remove++)
@@ -198,19 +220,38 @@ void List_R(vector<operation *> ops, int lat) {
 				}
 				else if (listing.at(count1)->getType() == IF)
 				{
-					ops.at(count1+2)->setscheduledstate(I);
-					int edgeid;
-					for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
+					if (count1 == 0)
 					{
-						edgeid = listing.at(count1)->getSucAt(del)->getId() - 1;
-						listing.at(edgeid)->minsedge();
+						ops.at(count1 + 2)->setscheduledstate(I);
+						int edgeid;
+						for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
+						{
+							edgeid = listing.at(count1)->getSucAt(del)->getId() - 1;
+							listing.at(edgeid)->minsedge();
+						}
+						listing.at(count1)->setEdge(-1);
 					}
+					else if (listing.at(count1 - 1)->getschetime() == 0)
+					{
+						ops.at(count1 + 2)->setscheduledstate(I);
+						int edgeid;
+						for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
+						{
+							edgeid = listing.at(count1)->getSucAt(del)->getId() - 1;
+							listing.at(edgeid)->minsedge();
+						}
+						listing.at(count1)->setEdge(-1);
+					}
+					
 				}
 				else
 				{
 					unschedulingdid.push_back(listing.at(count1));
 				}
-				listing.at(count1)->setEdge(-1);
+				if (listing.at(count1)->getType() != IF)
+				{
+					listing.at(count1)->setEdge(-1);
+				}
 			}
 		}
 
