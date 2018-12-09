@@ -137,12 +137,22 @@ int main(int argc, char *argv[]) {
       cout << endl;
    }
    setALAPS(operations, latency);
-
+   List_R(operations, latency);
    cout << "\n ALAP Timing:\n";
    for (int i = 1; i <= latency; i++) {
       cout << "t" << i << ": ";
       for (int j = 2; j < operations.size(); j++) {
          if (operations.at(j)->getALAPTime() == i) {
+            cout << "v" << j - 1 << ", ";
+         }
+      }
+      cout << "\n";
+   }
+   cout << "\n Scheduled Timing:\n";
+   for (int i = 1; i <= latency; i++) {
+      cout << "t" << i << ": ";
+      for (int j = 2; j < operations.size(); j++) {
+         if (operations.at(j)->getscheduledstate() == i) {
             cout << "v" << j - 1 << ", ";
          }
       }
@@ -228,7 +238,7 @@ verilogFile << "case(State)" << endl;
 			verilogFile << "end" << endl;
 		}
 		for (int j = 0; j < operations.size(); j++) {
-			if ((operations.at(j)->getALAPTime() == i) && (operations.at(j)->getInIfs().size() == 0)) {
+			if ((operations.at(j)->getscheduledstate() == i) && (operations.at(j)->getInIfs().size() == 0)) {
 				switch (operations.at(j)->getType()) {
 				case 0://REG
 				verilogFile << "//REG";
