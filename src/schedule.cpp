@@ -220,6 +220,7 @@ void List_R(vector<operation *> ops, int lat) {
 				}
 				else if (listing.at(count1)->getType() == IF)
 				{
+					listing.at(count1)->setschetime(0);
 					if (count1 == 0)
 					{
 						ops.at(count1 + 2)->setscheduledstate(I);
