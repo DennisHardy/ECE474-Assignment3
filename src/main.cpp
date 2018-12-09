@@ -20,19 +20,19 @@ int main(int argc, char *argv[]) {
 	if (argc != 4) {
 		cout << "Input and/or output files not specified" << endl;
 		cout << "usage: hlsyn cFile latency verilogFile" << endl;
-//		return -1;
+		return -1;
 	}
 
 	ifstream cFile;
 	int latency;
 	ofstream verilogFile;
 
-//	verilogFile.open(argv[3]);
-//	cFile.open(argv[1]);
-//	latency = atoi(argv[2]);
-	verilogFile.open("C:\\Users\\Zachary\\Desktop\\Test.txt");
-	cFile.open("C:\\Users\\Zachary\\Desktop\\test1.txt");
-	latency = 11;
+	verilogFile.open(argv[3]);
+	cFile.open(argv[1]);
+	latency = atoi(argv[2]);
+//	verilogFile.open("C:\\Users\\Zachary\\Desktop\\Test.txt");
+//	cFile.open("C:\\Users\\Zachary\\Desktop\\test1.txt");
+//	latency = 11;
 
 	if (!verilogFile.is_open()) {
 		cout << "Could not open verilogFile: " << argv[3] << endl;
@@ -549,7 +549,7 @@ int main(int argc, char *argv[]) {
 	verilogFile << "Final: begin" << endl;
 	verilogFile << "Done <= 1;" << endl << "State <= Wait;" << endl << "end" << endl << "endcase" << endl << "end" << endl << "end" << endl << "endmodule" << endl;
 
-	cout << "DONE:" << /*argv[1] <<*/ endl << endl;
+	cout << "DONE:" << argv[1] << endl << endl;
 	cFile.close();
 	verilogFile.close();
 }
