@@ -84,7 +84,7 @@ void List_R(vector<operation *> ops, int lat) {
 	bool scheduledcomlog = false;
 	bool scheduledcomif = false;
 	bool ifexist = false;
-
+	int ifstate = 0;
 	int delnum;
 	int waitnum;
 	int deladd=0, delmul=0, deldid=0, dellog=0,delif=0;
@@ -225,6 +225,7 @@ void List_R(vector<operation *> ops, int lat) {
 				else if (listing.at(count1)->getType() == IF)
 				{
 					ifexist = true;
+					ifstate = count1;
 					listing.at(count1)->setschetime(0);
 					if (count1 == 0)
 					{
@@ -258,7 +259,7 @@ void List_R(vector<operation *> ops, int lat) {
 						if (listing.at(count1 - 1)->getschetime() == 0)
 						{
 							listing.at(count1)->setschetime(0);
-							ops.at(count1 + 2)->setscheduledstate(I);
+							ops.at(count1 + 2)->setscheduledstate(ifstate+1);
 							int edgeid;
 							for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
 							{
