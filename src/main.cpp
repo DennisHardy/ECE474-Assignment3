@@ -303,7 +303,7 @@ int main(int argc, char *argv[]) {
 									verilogFile << operations.at(k)->getOutputs().at(0)->getName() << " <= ";
 									if (operations.at(k)->getType() == 5) { verilogFile << "("; }
 									verilogFile << operations.at(k)->getInputs().at(0)->getName();
-									if (operations.at(k)->getType() == 5) { verilogFile << ") "; }
+									if (operations.at(k)->getType() == 5) { verilogFile << ")?"; }
 									switch (operations.at(k)->getType()) {
 									case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 									case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -318,7 +318,7 @@ int main(int argc, char *argv[]) {
 									if (operations.at(k)->getCompType() == 2) { verilogFile << " == "; }
 									verilogFile << operations.at(k)->getInputs().at(1)->getName() << ") begin" << endl;
 									verilogFile << operations.at(k)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-									verilogFile << "else begin" << endl << operations.at(k)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end";
+									verilogFile << "else begin" << endl << operations.at(k)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end"  << endl;
 								}
 								else if (operations.at(k)->getType() == 8) {	//IF x2
 									verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName() << ") begin" << endl;
@@ -329,7 +329,7 @@ int main(int argc, char *argv[]) {
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
 													if (operations.at(l)->getType() == 5) { verilogFile << "("; }
 													verilogFile << operations.at(l)->getInputs().at(0)->getName();
-													if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+													if (operations.at(l)->getType() == 5) { verilogFile << ")?"; }
 													switch (operations.at(l)->getType()) {
 													case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 													case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]) {
 													if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
 													verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end" << endl;
 												}
 												else if (operations.at(l)->getType() == 8) {	//IF x3
 													//FIXME
@@ -356,7 +356,7 @@ int main(int argc, char *argv[]) {
 																	verilogFile << operations.at(m)->getOutputs().at(0)->getName() << " <= ";
 																	if (operations.at(m)->getType() == 5) { verilogFile << "("; }
 																	verilogFile << operations.at(m)->getInputs().at(0)->getName();
-																	if (operations.at(m)->getType() == 5) { verilogFile << ") "; }
+																	if (operations.at(m)->getType() == 5) { verilogFile << ")?"; }
 																	switch (operations.at(m)->getType()) {
 																	case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 																	case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -371,7 +371,7 @@ int main(int argc, char *argv[]) {
 																	if (operations.at(m)->getCompType() == 2) { verilogFile << " == "; }
 																	verilogFile << operations.at(m)->getInputs().at(1)->getName() << ") begin" << endl;
 																	verilogFile << operations.at(m)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-																	verilogFile << "else begin" << endl << operations.at(m)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+																	verilogFile << "else begin" << endl << operations.at(m)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end" << endl;
 																}
 																else if (operations.at(m)->getType() == 8) {	//IF x4
 																	verilogFile << "if (1) begin" << endl;
@@ -411,7 +411,7 @@ int main(int argc, char *argv[]) {
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
 													if (operations.at(l)->getType() == 5) { verilogFile << "("; }
 													verilogFile << operations.at(l)->getInputs().at(0)->getName();
-													if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+													if (operations.at(l)->getType() == 5) { verilogFile << ")?"; }
 													switch (operations.at(l)->getType()) {
 													case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 													case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -426,7 +426,7 @@ int main(int argc, char *argv[]) {
 													if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
 													verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end";
+													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end" << endl;
 												}
 												else if (operations.at(l)->getType() == 8) {	//IF x3
 													//FIXME
@@ -438,7 +438,7 @@ int main(int argc, char *argv[]) {
 																	verilogFile << operations.at(m)->getOutputs().at(0)->getName() << " <= ";
 																	if (operations.at(m)->getType() == 5) { verilogFile << "("; }
 																	verilogFile << operations.at(m)->getInputs().at(0)->getName();
-																	if (operations.at(m)->getType() == 5) { verilogFile << ") "; }
+																	if (operations.at(m)->getType() == 5) { verilogFile << ")?"; }
 																	switch (operations.at(m)->getType()) {
 																	case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 																	case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -453,7 +453,7 @@ int main(int argc, char *argv[]) {
 																	if (operations.at(m)->getCompType() == 2) { verilogFile << " == "; }
 																	verilogFile << operations.at(m)->getInputs().at(1)->getName() << ") begin" << endl;
 																	verilogFile << operations.at(m)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-																	verilogFile << "else begin" << endl << operations.at(m)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end";
+																	verilogFile << "else begin" << endl << operations.at(m)->getOutputs().at(0)->getName() << " <= 0 " << endl << "end" << endl;
 																}
 																else if (operations.at(m)->getType() == 8) {	//IF x4
 																	verilogFile << "if (1) begin" << endl;
@@ -499,7 +499,7 @@ int main(int argc, char *argv[]) {
 									verilogFile << operations.at(k)->getOutputs().at(0)->getName() << " <= ";
 									if (operations.at(k)->getType() == 5) { verilogFile << "("; }
 									verilogFile << operations.at(k)->getInputs().at(0)->getName();
-									if (operations.at(k)->getType() == 5) { verilogFile << ") "; }
+									if (operations.at(k)->getType() == 5) { verilogFile << ")?"; }
 									switch (operations.at(k)->getType()) {
 									case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 									case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -525,7 +525,7 @@ int main(int argc, char *argv[]) {
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
 													if (operations.at(l)->getType() == 5) { verilogFile << "("; }
 													verilogFile << operations.at(l)->getInputs().at(0)->getName();
-													if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+													if (operations.at(l)->getType() == 5) { verilogFile << ")?"; }
 													switch (operations.at(l)->getType()) {
 													case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 													case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -568,7 +568,7 @@ int main(int argc, char *argv[]) {
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= ";
 													if (operations.at(l)->getType() == 5) { verilogFile << "("; }
 													verilogFile << operations.at(l)->getInputs().at(0)->getName();
-													if (operations.at(l)->getType() == 5) { verilogFile << ") "; }
+													if (operations.at(l)->getType() == 5) { verilogFile << ")?"; }
 													switch (operations.at(l)->getType()) {
 													case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
 													case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
@@ -583,7 +583,7 @@ int main(int argc, char *argv[]) {
 													if (operations.at(l)->getCompType() == 2) { verilogFile << " == "; }
 													verilogFile << operations.at(l)->getInputs().at(1)->getName() << ") begin" << endl;
 													verilogFile << operations.at(l)->getOutputs().at(0)->getName() << " <= 1;" << endl << "end" << endl;
-													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end";
+													verilogFile << "else begin" << endl << operations.at(l)->getOutputs().at(0)->getName() << " <= 0;" << endl << "end" << endl;
 												}
 												else if (operations.at(l)->getType() == 8) {	//IF x3
 													verilogFile << "if (1) begin" << endl;
