@@ -121,9 +121,6 @@ operation::operation(vector<string> words, vector<variable *> avaliableVars,
 		for (int k = 0; k < curInput->getProducers().size(); k++) {
 			operation *potentialPred = curInput->getProducers().at(k);
 			bool inScope = true;
-			for (int l = 0; l < potentialPred->getInIfs().size(); l++) {
-				inScope &= this->inIf(potentialPred->getInIfs().at(l));
-			}
 			if (inScope) {
 				potentialPred->addSucessor(this);
 				this->addPredecessor(potentialPred);
