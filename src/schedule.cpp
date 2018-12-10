@@ -83,6 +83,7 @@ void List_R(vector<operation *> ops, int lat) {
 	bool scheduledcomdid = false;
 	bool scheduledcomlog = false;
 	bool scheduledcomif = false;
+	bool ifexist = false;
 
 	int delnum;
 	int waitnum;
@@ -93,9 +94,11 @@ void List_R(vector<operation *> ops, int lat) {
 	used[LOGIC] = 1;
 	used[DIVDR] = 1;
 
+	ifexist = false;
+
 	for (int I = 1; I <= lat; I++) {
-		/*cout << "I =" << I << ":" << "\n";
-		for (int test1 = 0; test1 < listing.size(); test1++)
+		cout << "I =" << I << ":" << ifexist << "\n";
+		/*for (int test1 = 0; test1 < listing.size(); test1++)
 		{
 			cout << "v" << listing.at(test1)->getId() << " edge is " << listing.at(test1)->getEdge() << " schetime is " << listing.at(test1)->getschetime() <<  ".\n";
 		}*/
@@ -103,6 +106,7 @@ void List_R(vector<operation *> ops, int lat) {
 		scheduledcommul = false;
 		scheduledcomdid = false;
 		scheduledcomlog = false;
+		cout << "V5 is " << listing.at(4)->getschetime() << "\n";
 		/////////////////////////////check schetime,remove edge
 		deladd = 0;
 		delmul = 0;
@@ -220,6 +224,7 @@ void List_R(vector<operation *> ops, int lat) {
 				}
 				else if (listing.at(count1)->getType() == IF)
 				{
+					ifexist = true;
 					listing.at(count1)->setschetime(0);
 					if (count1 == 0)
 					{
@@ -245,11 +250,31 @@ void List_R(vector<operation *> ops, int lat) {
 					}
 					
 				}
+				else if (listing.at(count1)->getType() == ELSE)
+				{
+					if (ifexist)
+					{
+						listing.at(count1)->setschetime(0);
+						if (listing.at(count1 - 1)->getschetime() == 0)
+						{
+							listing.at(count1)->setschetime(0);
+							ops.at(count1 + 2)->setscheduledstate(I);
+							int edgeid;
+							for (int del = 0; del < listing.at(count1)->getSucSize(); del++)
+							{
+								edgeid = listing.at(count1)->getSucAt(del)->getId() - 1;
+								listing.at(edgeid)->minsedge();
+							}
+							listing.at(count1)->setEdge(-1);
+							ifexist = false;
+						}
+					}
+				}
 				else
 				{
 					unschedulingdid.push_back(listing.at(count1));
 				}
-				if (listing.at(count1)->getType() != IF)
+				if (listing.at(count1)->getType() != IF && listing.at(count1)->getType() != ELSE)
 				{
 					listing.at(count1)->setEdge(-1);
 				}
