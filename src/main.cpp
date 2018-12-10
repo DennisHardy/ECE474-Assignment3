@@ -390,7 +390,6 @@ int main(int argc, char *argv[]) {
 													}
 													verilogFile << "end" << endl;
 													//FIXME	
-													verilogFile << "end" << endl;
 												}
 												else if (operations.at(l)->getType() == 9) {	//ELSE x3
 													verilogFile << "else begin" << endl;
@@ -473,7 +472,6 @@ int main(int argc, char *argv[]) {
 													}
 													verilogFile << "end" << endl;
 													//FIXME	
-													verilogFile << "end" << endl;
 												}
 												else if (operations.at(l)->getType() == 9) {	//ELSE x3
 													verilogFile << "else begin" << endl;
