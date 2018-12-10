@@ -306,10 +306,12 @@ int main(int argc, char *argv[]) {
 									if (operations.at(k)->getType() == 5) { verilogFile << ")?"; }
 									switch (operations.at(k)->getType()) {
 									case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
-									case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+									case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
 									default: verilogFile << "0 //"; break;
 									}
-									verilogFile << operations.at(k)->getInputs().at(1)->getName() << ";" << endl;
+									verilogFile << operations.at(k)->getInputs().at(1)->getName() 
+									if(operations.at(k)->getType() == 5) { verilogFile << ":" << operations.at(k)->getInputs().at(2)->getName();}
+									verilogFile << ";" << endl;
 								}
 								else if (operations.at(k)->getType() == 4) {	//COMP
 									verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName();
@@ -502,10 +504,12 @@ int main(int argc, char *argv[]) {
 									if (operations.at(k)->getType() == 5) { verilogFile << ")?"; }
 									switch (operations.at(k)->getType()) {
 									case 1: verilogFile << " + "; break;	case 2: verilogFile << " - "; break;	case 3: verilogFile << " * "; break;
-									case 5: verilogFile << ":"; break;		case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
+									case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
 									default: verilogFile << "0 //"; break;
 									}
-									verilogFile << operations.at(k)->getInputs().at(1)->getName() << ";" << endl;
+									verilogFile << operations.at(k)->getInputs().at(1)->getName() 
+									if(operations.at(k)->getType() == 5) { verilogFile << ":" << operations.at(k)->getInputs().at(2)->getName();}
+									verilogFile << ";" << endl;
 								}
 								else if (operations.at(k)->getType() == 4) {	//COMP
 									verilogFile << "if (" << operations.at(k)->getInputs().at(0)->getName();
