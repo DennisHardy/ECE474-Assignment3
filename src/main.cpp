@@ -309,7 +309,7 @@ int main(int argc, char *argv[]) {
 									case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
 									default: verilogFile << "0 //"; break;
 									}
-									verilogFile << operations.at(k)->getInputs().at(1)->getName() 
+									verilogFile << operations.at(k)->getInputs().at(1)->getName();
 									if(operations.at(k)->getType() == 5) { verilogFile << ":" << operations.at(k)->getInputs().at(2)->getName();}
 									verilogFile << ";" << endl;
 								}
@@ -507,7 +507,7 @@ int main(int argc, char *argv[]) {
 									case 6: verilogFile << " >> "; break;	case 7: verilogFile << " << "; break;
 									default: verilogFile << "0 //"; break;
 									}
-									verilogFile << operations.at(k)->getInputs().at(1)->getName() 
+									verilogFile << operations.at(k)->getInputs().at(1)->getName();
 									if(operations.at(k)->getType() == 5) { verilogFile << ":" << operations.at(k)->getInputs().at(2)->getName();}
 									verilogFile << ";" << endl;
 								}
